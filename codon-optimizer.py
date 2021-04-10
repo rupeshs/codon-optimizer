@@ -5,7 +5,8 @@ from prettytable import PrettyTable
 import numpy
 
 # Setting seed, DNA Chisel Reproducibility
-numpy.random.seed(1234) 
+numpy.random.seed(1234)
+
 
 class VaccineCodonOptimiser():
     def __init__(self):
@@ -35,7 +36,7 @@ class VaccineCodonOptimiser():
 
     def get_virus_codons(self):
         return self.__virus_codons
-      
+
     def get_codon_match_ratio(self):
         match_count = 0
         match_count = sum(x == y for x, y in zip(
@@ -50,8 +51,8 @@ class VaccineCodonOptimiser():
         for x, y in zip(self.__vaccine_codons, self.__vaccine_codons_gen):
             for na, nb in zip(x, y):
                 if na == nb:
-                    total_diff = total_diff + 1
-            total_len = total_len + 3
+                    total_diff += 1
+            total_len += 3
         ratio = (total_diff / total_len) * 100.0
         return round(ratio, 2)
 
@@ -64,9 +65,9 @@ class VaccineCodonOptimiser():
             total_nt = total_nt + 1
             for nt in codon:
                 if nt == "G":
-                    g_count = g_count + 1
+                    g_count += 1
                 elif nt == "C":
-                    c_count = c_count + 1
+                    c_count += 1
         gc_ratio = (g_count + c_count) / (total_nt*3) * 100
 
         return round(gc_ratio, 2)
@@ -82,6 +83,7 @@ class VaccineCodonOptimiser():
                 sorted(table[amino_acid].items(), key=lambda item: item[1], reverse=True))
             new_codon = list(sorted_amino.keys())[0]
             self.__vaccine_codons_gen.append(new_codon)
+        return
 
     def __get_strand(self, codons):
         codon_strand = ""
@@ -117,30 +119,30 @@ class VaccineCodonOptimiser():
         vcodon = ""
         for x in problem.sequence:
             if count % 3 == 0:
-                vcodon = vcodon + x
+                vcodon += x
                 self.__vaccine_codons_gen.append(vcodon)
                 vcodon = ""
             else:
-                vcodon = vcodon + x
-            count = count + 1
+                vcodon += x
+            count += 1
         return
 
 
 if __name__ == "__main__":
-    
+
     vaccine_opti = VaccineCodonOptimiser()
     vaccine_opti.load_codons("side-by-side.csv")
-    
+
     ptbl = PrettyTable()
     ptbl.field_names = ["Species", "Codon Match %",
-                    "Nucleotide Match %", "GC ratio %"]
+                        "Nucleotide Match %", "GC ratio %"]
     species = ["h_sapiens_9606", "m_musculus_10090"]
     for speci in species:
         vaccine_opti.transform_dnachisel(speci)
         ptbl.add_row([speci,
-                  vaccine_opti.get_codon_match_ratio(),
-                  vaccine_opti.get_nucleotide_match_ratio(),
-                  vaccine_opti.get_gc_ratio()])
+                      vaccine_opti.get_codon_match_ratio(),
+                      vaccine_opti.get_nucleotide_match_ratio(),
+                      vaccine_opti.get_gc_ratio()])
 
     print(ptbl)
 #         species   bases  codons
