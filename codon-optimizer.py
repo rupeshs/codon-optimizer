@@ -5,9 +5,7 @@ from prettytable import PrettyTable
 import numpy
 
 # Setting seed, DNA Chisel Reproducibility
-numpy.random.seed(1234)
-
-
+numpy.random.seed(10110)
 class VaccineCodonOptimiser():
     def __init__(self):
         self.__virus_codons = []
@@ -104,7 +102,7 @@ class VaccineCodonOptimiser():
             constraints=[
                 EnforceTranslation(genetic_table='Standard',
                                    start_codon='ATG'),
-                EnforceGCContent(mini=0.54, maxi=0.90, window=120)
+                EnforceGCContent(mini=0.54, maxi=0.9, window=120)
                 #EnforceGCContent(mini=0.54, maxi=0.92, window=200),
             ],
             objectives=[
@@ -126,8 +124,7 @@ class VaccineCodonOptimiser():
                 vcodon += x
             count += 1
         return
-
-
+    
 if __name__ == "__main__":
 
     vaccine_opti = VaccineCodonOptimiser()
@@ -145,6 +142,3 @@ if __name__ == "__main__":
                       vaccine_opti.get_gc_ratio()])
 
     print(ptbl)
-#         species   bases  codons
-#  h_sapiens_9606  90.97%  78.26%
-# m_musculus_10090  91.08%  78.57%
