@@ -44,14 +44,14 @@ class VaccineCodonOptimiser():
         return round(self.__codon_match_ratio, 2)
 
     def get_nucleotide_match_ratio(self):
-        total_diff = 0
+        match = 0
         total_len = 0
         for x, y in zip(self.__vaccine_codons, self.__vaccine_codons_gen):
             for na, nb in zip(x, y):
                 if na == nb:
-                    total_diff += 1
+                    match += 1
             total_len += 3
-        ratio = (total_diff / total_len) * 100.0
+        ratio = (match / total_len) * 100.0
         return round(ratio, 2)
 
     def get_gc_ratio(self):
@@ -60,17 +60,17 @@ class VaccineCodonOptimiser():
         c_count = 0
         total_nt = 0
         for codon in self.__vaccine_codons_gen:
-            total_nt = total_nt + 1
+            total_nt += 1
             for nt in codon:
                 if nt == "G":
                     g_count += 1
                 elif nt == "C":
                     c_count += 1
-        gc_ratio = (g_count + c_count) / (total_nt*3) * 100
+        gc_ratio = (g_count + c_count) / (total_nt * 3) * 100
 
         return round(gc_ratio, 2)
 
-    def transform_remap(self, codon_table):
+    def optimize_frequent(self, codon_table):
         table = pct.get_codons_table(codon_table)
         self.__vaccine_codons_gen.clear()
         for codon in self.__virus_codons:
@@ -83,19 +83,19 @@ class VaccineCodonOptimiser():
             self.__vaccine_codons_gen.append(new_codon)
         return
 
-    def __get_strand(self, codons):
+    def get_strand(self, codons):
         codon_strand = ""
         for codon in codons:
             codon_strand = codon_strand + codon
         return codon_strand
 
-    def transform_dnachisel(self, codon_table):
-        self.transform_remap(codon_table)
+    def optimize(self, codon_table):
+        self.optimize_frequent(codon_table)
         # return
         opt_codons = self.__vaccine_codons_gen.copy()
         self.__vaccine_codons_gen.clear()
-        vac_strand = self.__get_strand(opt_codons)
-        #vir_strand = self.__get_strand(self.__virus_codons)
+        vac_strand = self.get_strand(opt_codons)
+        #vir_strand = self.get_strand(self.__virus_codons)
         codon_table = pct.get_codons_table(codon_table)
         problem = DnaOptimizationProblem(
             sequence=vac_strand,
@@ -127,18 +127,19 @@ class VaccineCodonOptimiser():
     
 if __name__ == "__main__":
 
-    vaccine_opti = VaccineCodonOptimiser()
-    vaccine_opti.load_codons("side-by-side.csv")
+    vacc_optimizer = VaccineCodonOptimiser()
+    vacc_optimizer.load_codons("side-by-side.csv")
 
     ptbl = PrettyTable()
     ptbl.field_names = ["Species", "Codon Match %",
                         "Nucleotide Match %", "GC ratio %"]
     species = ["h_sapiens_9606", "m_musculus_10090"]
     for speci in species:
-        vaccine_opti.transform_dnachisel(speci)
+        vacc_optimizer.optimize(speci)
         ptbl.add_row([speci,
-                      vaccine_opti.get_codon_match_ratio(),
-                      vaccine_opti.get_nucleotide_match_ratio(),
-                      vaccine_opti.get_gc_ratio()])
-
+                      vacc_optimizer.get_codon_match_ratio(),
+                      vacc_optimizer.get_nucleotide_match_ratio(),
+                      vacc_optimizer.get_gc_ratio()])
+         
     print(ptbl)
+    #print(vacc_optimizer.get_strand(vaccine_opti.get_vaccine_codons()))
