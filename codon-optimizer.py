@@ -6,6 +6,7 @@ import numpy
 
 # Setting seed, DNA Chisel Reproducibility
 numpy.random.seed(10110)
+
 class VaccineCodonOptimiser():
     def __init__(self):
         self.__virus_codons = []
@@ -103,7 +104,6 @@ class VaccineCodonOptimiser():
                 EnforceTranslation(genetic_table='Standard',
                                    start_codon='ATG'),
                 EnforceGCContent(mini=0.54, maxi=0.9, window=120)
-                #EnforceGCContent(mini=0.54, maxi=0.92, window=200),
             ],
             objectives=[
                 CodonOptimize(method="use_best_codon",
@@ -126,10 +126,10 @@ class VaccineCodonOptimiser():
         return
     
 if __name__ == "__main__":
-
+    
     vacc_optimizer = VaccineCodonOptimiser()
     vacc_optimizer.load_codons("side-by-side.csv")
-
+    
     ptbl = PrettyTable()
     ptbl.field_names = ["Species", "Codon Match %",
                         "Nucleotide Match %", "GC ratio %"]
