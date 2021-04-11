@@ -68,7 +68,6 @@ class VaccineCodonOptimiser():
                 elif nt == "C":
                     c_count += 1
         gc_ratio = (g_count + c_count) / (total_nt * 3) * 100
-
         return round(gc_ratio, 2)
 
     def optimize_frequent(self, codon_table):
