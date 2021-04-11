@@ -140,6 +140,5 @@ if __name__ == "__main__":
                       vacc_optimizer.get_codon_match_ratio(),
                       vacc_optimizer.get_nucleotide_match_ratio(),
                       vacc_optimizer.get_gc_ratio()])
-         
     print(ptbl)
     #print(vacc_optimizer.get_strand(vacc_optimizer.get_vaccine_codons()))
