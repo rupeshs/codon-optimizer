@@ -9,6 +9,12 @@ Two round optimizations are done
  The "m_musculus_10090" has slightly better result.\
 ![GitHub Logo](/images/output.png)
 
+## Python dependencies
+* python_codon_tables
+* dnachisel
+* prettytable
+* numpy 
+
 ## References:
 [1] [GC ratio ](https://en.wikipedia.org/wiki/GC-content)\
 [2] [Reverse Engineering Source Code of the Biontech Pfizer Vaccine](https://berthub.eu/articles/posts/3.part-2-reverse-engineering-source-code-of-the-biontech-pfizer-vaccine/)\
